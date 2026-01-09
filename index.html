@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movistar México | Tienda Oficial</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        movistar: {
+                            blue: '#019DF4',
+                            dark: '#0B2739',
+                            green: '#5BC500',
+                            light: '#F5F5F5',
+                            gray: '#86888C',
+                            hover: '#007bbd'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    animation: {
+                        'slide-in': 'slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        slideIn: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos base */
+        body { background-color: #f8f9fa; scroll-behavior: smooth; }
+        
+        /* Navegación Activa */
+        .nav-link { position: relative; color: #555; transition: color 0.3s; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 3px; bottom: -4px; left: 0;
+            background-color: #019DF4; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-link:hover { color: #019DF4; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #019DF4; font-weight: 700; }
+
+        /* Tarjetas de Producto */
+        .product-card { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 5px 15px rgba(1, 157, 244, 0.1); border-color: #019DF4; }
+
+        /* Support Cards */
+        .support-card { transition: all 0.3s ease; }
+        .support-card:hover { transform: translateY(-5px); border-color: #5BC500; background-color: #fdfdfd; }
+        .support-icon { transition: all 0.3s ease; }
+        .support-card:hover .support-icon { transform: scale(1.1) rotate(5deg); }
+
+        /* --- ESTILOS MAPA --- */
+        .map-container { position: relative; background-color: #0B2739; overflow: hidden; border-radius: 1.5rem; }
+        .network-grid {
+            background-image: linear-gradient(rgba(1, 157, 244, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(1, 157, 244, 0.2) 1px, transparent 1px);
+            background-size: 30px 30px; opacity: 0.4;
+        }
+        .signal-point { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(91,197,0,0.8) 0%, rgba(91,197,0,0) 70%); animation: pulse-signal 3s infinite; }
+        .signal-point-blue { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(1,157,244,0.6) 0%, rgba(1,157,244,0) 70%); animation: pulse-signal 4s infinite 1s; }
+        @keyframes pulse-signal { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
+        .radar-scan {
+            position: absolute; width: 100%; height: 100%; top: 0; left: -100%;
+            background: linear-gradient(to right, transparent 0%, rgba(1, 157, 244, 0.2) 50%, transparent 100%);
+            animation: scan 3.5s linear infinite;
+        }
+        @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+
+        /* Chat y UI Elements */
+        .chat-float { animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+        .modal-backdrop { backdrop-filter: blur(8px); }
+        
+        .typing-indicator span { display: inline-block; width: 6px; height: 6px; background-color: #019DF4; border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; margin: 0 1px; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+</head>
+<body class="font-sans text-movistar-dark flex flex-col min-h-screen selection:bg-movistar-blue selection:text-white">
+
+    <!-- Navbar Corporativo -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm fixed w-full z-50 top-0 h-16 md:h-20 flex items-center transition-all duration-300">
+        <div class="container mx-auto px-4 flex justify-between items-center h-full">
+            <!-- Logo M Movistar (Minimalista) -->
+            <a href="#" onclick="showView('home')" class="flex items-center gap-2 cursor-pointer group">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Movistar_Logo.svg/1024px-Movistar_Logo.svg.png" alt="M" class="h-8 md:h-9 group-hover:scale-110 transition-transform duration-300">
+            </a>
+
+            <!-- Menú Principal -->
+            <div class="hidden lg:flex h-full space-x-8 font-medium text-sm tracking-wide items-center">
+                <button onclick="showView('home')" id="nav-home" class="nav-link px-1 py-2">INICIO</button>
+                <button onclick="showView('planes')" id="nav-planes" class="nav-link px-1 py-2">PLANES</button>
+                <button onclick="showView('equipos')" id="nav-equipos" class="nav-link px-1 py-2">TIENDA</button>
+                <button onclick="showView('portabilidad')" id="nav-portabilidad" class="nav-link px-1 py-2 text-movistar-blue font-bold">PORTABILIDAD</button>
+                <button onclick="showView('cobertura')" id="nav-cobertura" class="nav-link px-1 py-2">COBERTURA</button>
+                <button onclick="showView('testimonios')" id="nav-testimonios" class="nav-link px-1 py-2">TESTIMONIOS</button>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex items-center gap-4">
+                <button onclick="showView('soporte')" id="nav-soporte" class="hidden md:flex items-center gap-2 text-sm font-bold text-movistar-blue border border-movistar-blue px-6 py-2 rounded-full hover:bg-movistar-blue hover:text-white transition-all shadow-sm hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-headset"></i> Soporte
+                </button>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-2xl text-movistar-blue p-2 hover:bg-blue-50 rounded-lg transition">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menú Móvil -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleMobileMenu()"></div>
+        <div class="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl p-6 pt-24 space-y-2 animate-slide-in flex flex-col overflow-y-auto">
+            <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-3xl text-gray-400 hover:text-red-500 transition">&times;</button>
+            <button onclick="showView('home'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left hover:text-movistar-blue transition px-2">Inicio</button>
+            <button onclick="showView('planes'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left hover:text-movistar-blue transition px-2">Planes</button>
+            <button onclick="showView('equipos'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left hover:text-movistar-blue transition px-2">Tienda</button>
+            <button onclick="showView('portabilidad'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left text-movistar-blue px-2">Portabilidad</button>
+            <button onclick="showView('cobertura'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left hover:text-movistar-blue transition px-2">Cobertura</button>
+            <button onclick="showView('soporte'); toggleMobileMenu()" class="text-lg font-bold border-b border-gray-100 py-4 text-left hover:text-movistar-blue transition px-2">Soporte y Ayuda</button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="pt-16 md:pt-20 flex-grow bg-gray-50">
+
+        <!-- VISTA 1: HOME (REDITADO VISUALMENTE) -->
+        <section id="view-home" class="fade-in">
+            <!-- Hero Moderno -->
+            <div class="relative h-[550px] md:h-[650px] overflow-hidden flex items-center bg-movistar-dark">
+                <!-- Fondo Animado -->
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2065&auto=format&fit=crop')] bg-cover bg-center opacity-40 animate-pulse-slow"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0B2739] via-[#0B2739]/80 to-transparent"></div>
+                
+                <div class="container mx-auto px-4 relative z-10 flex flex-col justify-center h-full">
+                    <div class="max-w-2xl animate-fade-in pl-4 md:pl-0">
+                        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full mb-6">
+                            <span class="w-2 h-2 rounded-full bg-movistar-green animate-pulse"></span>
+                            <span class="text-white text-xs font-bold tracking-widest uppercase">Promoción 2026</span>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight drop-shadow-xl">
+                            TU MUNDO,<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-movistar-blue to-cyan-300">SIN LÍMITES.</span>
+                        </h1>
+                        <p class="text-lg md:text-2xl text-gray-200 font-light mb-10 leading-relaxed border-l-4 border-movistar-green pl-6">
+                            Estrena hoy el nuevo <strong>iPhone 17</strong> financiado y recibe un Smartwatch de regalo. Sin pago inicial.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-5">
+                            <button onclick="showView('equipos')" class="bg-movistar-green hover:bg-white hover:text-movistar-green text-white font-bold py-4 px-10 rounded-full transition-all shadow-[0_0_20px_rgba(91,197,0,0.4)] transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2">
+                                <i class="fas fa-shopping-bag"></i> Ver Equipos
+                            </button>
+                            <button onclick="showView('portabilidad')" class="bg-transparent border-2 border-white hover:bg-white hover:text-movistar-dark text-white font-bold py-4 px-10 rounded-full transition-all shadow-lg transform hover:-translate-y-1 text-lg">
+                                Cámbiate a Movistar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos Rápidos (Floating Cards) -->
+            <div class="container mx-auto px-4 -mt-24 relative z-20 pb-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="showView('equipos')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-blue group">
+                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-movistar-blue text-2xl mb-4 group-hover:bg-movistar-blue group-hover:text-white transition"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-2">Renueva tu Equipo</h3>
+                        <p class="text-gray-500 text-sm">Encuentra los últimos modelos con 40% de descuento y regalos.</p>
+                    </div>
+                    <div onclick="showView('portabilidad')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-green group">
+                        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-movistar-green text-2xl mb-4 group-hover:bg-movistar-green group-hover:text-white transition"><i class="fas fa-exchange-alt"></i></div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-2">Portabilidad Express</h3>
+                        <p class="text-gray-500 text-sm">Trae tu número en 24 horas y obtén doble de GB por un año.</p>
+                    </div>
+                    <div onclick="showView('soporte')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-dark group">
+                        <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-movistar-dark text-2xl mb-4 group-hover:bg-movistar-dark group-hover:text-white transition"><i class="fas fa-user-shield"></i></div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-2">Centro de Ayuda</h3>
+                        <p class="text-gray-500 text-sm">Resuelve dudas de facturación, fallas o reportes al instante.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 2: PLANES -->
+        <section id="view-planes" class="hidden fade-in py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <span class="text-movistar-blue font-bold tracking-widest text-sm uppercase">CONECTIVIDAD TOTAL</span>
+                    <h2 class="text-4xl font-black mt-2 mb-4 text-movistar-dark">Planes a tu Medida</h2>
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Contrata hoy vía WhatsApp y recibe beneficios exclusivos por lanzamiento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Plan Pro 8 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover:border-movistar-blue group hover:-translate-y-2">
+                        <div class="text-center mb-8">
+                            <h3 class="font-bold text-gray-600 text-lg">Plan Pro 8</h3>
+                            <div class="text-5xl font-black text-movistar-blue my-4">$156</div>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">Mensual</span>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-600 mb-8">
+                            <li class="flex items-center"><i class="fas fa-wifi w-8 text-center text-movistar-blue text-lg"></i> 8 GB Navegación</li>
+                            <li class="flex items-center"><i class="fas fa-share-alt w-8 text-center text-movistar-blue text-lg"></i> Redes Ilimitadas</li>
+                            <li class="flex items-center"><i class="fab fa-whatsapp w-8 text-center text-movistar-green text-lg"></i> WhatsApp Ilimitado</li>
+                        </ul>
+                        <button onclick="sendWhatsapp('Hola, me interesa contratar el Plan Pro 8 de $156/mes.')" class="w-full bg-white border-2 border-movistar-blue text-movistar-blue font-bold py-3 rounded-xl hover:bg-movistar-blue hover:text-white transition">LO QUIERO</button>
+                    </div>
+
+                    <!-- Plan Pro 10 (Destacado) -->
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-2 border-movistar-blue relative transform md:-translate-y-4 z-10">
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-movistar-blue text-white text-xs font-bold px-6 py-2 rounded-full shadow-lg tracking-wider">RECOMENDADO</div>
+                        <div class="text-center mb-8">
+                            <h3 class="font-bold text-movistar-dark text-xl">Plan Pro 10</h3>
+                            <div class="text-6xl font-black text-movistar-blue my-4">$186</div>
+                            <span class="bg-blue-50 text-movistar-blue text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">Mensual</span>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-600 mb-8">
+                            <li class="flex items-center"><i class="fas fa-wifi w-8 text-center text-movistar-blue text-lg"></i> <strong>15 GB</strong> Navegación</li>
+                            <li class="flex items-center"><i class="fas fa-share-alt w-8 text-center text-movistar-blue text-lg"></i> Redes Ilimitadas</li>
+                            <li class="flex items-center"><i class="fab fa-spotify w-8 text-center text-movistar-green text-lg"></i> Música Libre</li>
+                        </ul>
+                        <button onclick="sendWhatsapp('Hola, me interesa contratar el Plan Pro 10 de $186/mes (Recomendado).')" class="w-full bg-gradient-to-r from-movistar-blue to-blue-600 text-white font-bold py-4 rounded-xl hover:shadow-lg transition transform hover:scale-105">LO QUIERO</button>
+                    </div>
+
+                    <!-- Plan Pro 20 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover:border-movistar-blue group hover:-translate-y-2">
+                        <div class="text-center mb-8">
+                            <h3 class="font-bold text-gray-600 text-lg">Plan Pro 20</h3>
+                            <div class="text-5xl font-black text-movistar-blue my-4">$300</div>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">Mensual</span>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-600 mb-8">
+                            <li class="flex items-center"><i class="fas fa-wifi w-8 text-center text-movistar-blue text-lg"></i> 25 GB Navegación</li>
+                            <li class="flex items-center"><i class="fas fa-gamepad w-8 text-center text-movistar-blue text-lg"></i> Apps Gaming Free</li>
+                            <li class="flex items-center"><i class="fas fa-video w-8 text-center text-movistar-blue text-lg"></i> Video Redes</li>
+                        </ul>
+                        <button onclick="sendWhatsapp('Hola, me interesa contratar el Plan Pro 20 Gamer de $300/mes.')" class="w-full bg-white border-2 border-movistar-blue text-movistar-blue font-bold py-3 rounded-xl hover:bg-movistar-blue hover:text-white transition">LO QUIERO</button>
+                    </div>
+
+                    <!-- Plan Black -->
+                    <div class="bg-gray-900 text-white p-8 rounded-3xl shadow-xl border border-gray-700 hover:border-movistar-green transition group hover:-translate-y-2">
+                        <div class="text-center mb-8">
+                            <h3 class="font-bold text-movistar-green text-lg">Ilimitidatos Black</h3>
+                            <div class="text-5xl font-black text-white my-4">$699</div>
+                            <span class="bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">Mensual</span>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center"><i class="fas fa-infinity w-8 text-center text-movistar-green text-lg"></i> TODO ILIMITADO</li>
+                            <li class="flex items-center"><i class="fas fa-globe-americas w-8 text-center text-movistar-green text-lg"></i> Roaming Mundial</li>
+                            <li class="flex items-center"><i class="fas fa-crown w-8 text-center text-yellow-400 text-lg"></i> Atención VIP</li>
+                        </ul>
+                        <button onclick="sendWhatsapp('Hola, me interesa contratar el Plan Ilimitidatos Black de $699/mes.')" class="w-full bg-movistar-green text-white font-bold py-3 rounded-xl hover:bg-green-600 transition shadow-glow">LO QUIERO</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 3: TIENDA (53 EQUIPOS - INCLUYE IPHONE 17) -->
+        <section id="view-equipos" class="hidden fade-in py-8">
+            <div class="bg-white/90 backdrop-blur-md shadow-sm py-6 mb-8 sticky top-16 z-30 transition-all">
+                <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl font-bold text-movistar-dark">Tienda en Línea</h2>
+                        <p class="text-gray-500 text-sm flex items-center gap-2"><span class="bg-movistar-green text-white px-2 rounded text-xs font-bold">NUEVO</span> iPhone 17 Ya Disponible</p>
+                    </div>
+                    <div class="relative w-full md:w-auto group">
+                        <input type="text" placeholder="Buscar modelo (Ej. iPhone 17)..." onkeyup="searchProducts(this.value)" class="pl-10 pr-4 py-3 rounded-full border border-gray-300 w-full md:w-96 focus:outline-none focus:border-movistar-blue focus:ring-2 focus:ring-blue-100 transition-all shadow-sm bg-gray-50 group-hover:bg-white">
+                        <i class="fas fa-search absolute left-4 top-4 text-gray-400 group-hover:text-movistar-blue transition"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 flex flex-col lg:flex-row gap-8">
+                <!-- Filtros -->
+                <aside class="w-full lg:w-1/5">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 sticky top-48">
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2 text-movistar-dark">Marcas</h3>
+                        <div id="brand-filters" class="space-y-3">
+                            <!-- JS -->
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Grid Productos -->
+                <div class="w-full lg:w-4/5">
+                    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 4: PORTABILIDAD (DISCRETA Y FUNCIONAL) -->
+        <section id="view-portabilidad" class="hidden fade-in py-12 bg-white">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-4xl font-black text-movistar-blue mb-4">CÁMBIATE A MOVISTAR</h2>
+                    <p class="text-gray-600 text-lg">Conserva tu número y disfruta de los mejores beneficios.</p>
+                </div>
+                
+                <div class="bg-white shadow-2xl rounded-3xl p-8 md:p-12 border border-gray-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-movistar-blue to-movistar-green"></div>
+                    
+                    <h3 class="text-xl font-bold mb-8 pb-2 border-b flex items-center gap-2 text-gray-700">
+                        <i class="fas fa-user-edit text-movistar-blue"></i> Datos del Titular
+                    </h3>
+                    
+                    <form id="portability-form" onsubmit="submitPortability(event)" class="space-y-6">
+                        <!-- Datos personales -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nombre(s)</label>
+                                <input type="text" id="port-name" required class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue focus:ring-2 focus:ring-blue-100 outline-none transition bg-gray-50" placeholder="Ej. Juan">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Primer Apellido</label>
+                                <input type="text" id="port-app-paterno" required class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue focus:ring-2 focus:ring-blue-100 outline-none transition bg-gray-50" placeholder="Ej. Pérez">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Segundo Apellido</label>
+                                <input type="text" id="port-app-materno" class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue focus:ring-2 focus:ring-blue-100 outline-none transition bg-gray-50" placeholder="Opcional">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Fecha de Nacimiento</label>
+                                <input type="date" id="port-dob" required class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue outline-none transition bg-gray-50 text-gray-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Género</label>
+                                <select id="port-sex" required class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue outline-none transition bg-gray-50 text-gray-600">
+                                    <option value="">Selecciona...</option>
+                                    <option value="H">Hombre</option>
+                                    <option value="M">Mujer</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Lugar de Nacimiento</label>
+                                <select id="port-state" required class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-blue outline-none transition bg-gray-50 text-gray-600">
+                                    <option value="">Selecciona estado...</option>
+                                    <!-- Se llena con JS -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-6 mt-6">
+                            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-700">
+                                <i class="fas fa-mobile-alt text-movistar-green"></i> Datos de la Línea
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Número a Portar (10 dígitos)</label>
+                                    <input type="tel" id="port-phone" required pattern="[0-9]{10}" class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-green outline-none bg-gray-50" placeholder="5512345678">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">NIP de Portabilidad (4 dígitos)</label>
+                                    <div class="relative">
+                                        <input type="tel" id="port-nip" required pattern="[0-9]{4}" class="w-full border border-gray-300 rounded-lg p-3 focus:border-movistar-green outline-none bg-gray-50 pl-10" placeholder="####">
+                                        <i class="fas fa-key absolute left-3 top-3.5 text-gray-400"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-400 mt-1">Marca al <strong>051</strong> para obtenerlo gratis.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-movistar-green text-white font-bold py-4 rounded-xl hover:bg-green-600 transition shadow-lg text-lg flex justify-center items-center gap-3 transform hover:scale-[1.01]">
+                            CONTINUAR EN WHATSAPP <i class="fab fa-whatsapp text-2xl"></i>
+                        </button>
+                        <p class="text-center text-xs text-gray-400 mt-2">Al dar click, un asesor continuará tu trámite de forma segura.</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 5: COBERTURA -->
+        <section id="view-cobertura" class="hidden fade-in bg-gray-900 text-white min-h-[85vh] relative flex items-center">
+            <div class="container mx-auto px-4 py-16 relative z-10">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="w-full lg:w-5/12">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-3 h-3 rounded-full bg-green-500 animate-ping"></span>
+                            <span class="text-movistar-green font-bold tracking-widest text-sm uppercase">RED ACTIVA EN VIVO</span>
+                        </div>
+                        <h2 class="text-5xl md:text-6xl font-black mb-6 leading-none">COBERTURA <br><span class="text-movistar-blue">TOTAL</span></h2>
+                        <p class="text-gray-300 mb-8 text-lg border-l-4 border-movistar-green pl-4">Nuestra red inteligente detecta automáticamente la mejor señal disponible (Propia o Extendida) para que nunca te desconectes.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                                <div class="text-3xl font-black text-white mb-1">98%</div>
+                                <div class="text-xs text-gray-400 uppercase">Población Urbana</div>
+                            </div>
+                            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                                <div class="text-3xl font-black text-white mb-1">5G</div>
+                                <div class="text-xs text-gray-400 uppercase">Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full lg:w-7/12 relative">
+                        <!-- Mapa Container -->
+                        <div class="map-container h-[500px] w-full shadow-[0_0_50px_rgba(1,157,244,0.3)] border border-movistar-blue/30">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Mexico_relief_location_map.jpg/1024px-Mexico_relief_location_map.jpg" 
+                                 class="w-full h-full object-cover opacity-30 grayscale contrast-125 mix-blend-luminosity absolute inset-0">
+                            
+                            <!-- Capas de efectos -->
+                            <div class="absolute inset-0 network-grid"></div>
+                            <div class="radar-scan"></div>
+                            
+                            <!-- Hotspots -->
+                            <div class="signal-point w-32 h-32 top-[45%] left-[48%]"></div>
+                            <div class="signal-point w-24 h-24 top-[25%] left-[20%]"></div>
+                            <div class="signal-point w-24 h-24 top-[60%] left-[70%]"></div>
+                            <div class="signal-point-blue w-40 h-40 top-[30%] left-[40%] opacity-50"></div>
+                            
+                            <!-- UI Flotante -->
+                            <div class="absolute bottom-4 right-4 bg-black/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 max-w-xs">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-bold text-gray-400 uppercase">Estado</span>
+                                    <span class="text-xs font-bold text-green-400">OPTIMO</span>
+                                </div>
+                                <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-green-500 w-[98%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 6: TESTIMONIOS -->
+        <section id="view-testimonios" class="hidden fade-in py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-black mb-4 text-movistar-dark">Voces Movistar</h2>
+                    <p class="text-gray-600 text-lg">La experiencia real de quienes ya se cambiaron.</p>
+                </div>
+                <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                    <!-- JS -->
+                </div>
+                
+                <div class="max-w-3xl mx-auto bg-blue-50 p-8 rounded-3xl border border-blue-100 shadow-inner">
+                    <h3 class="text-2xl font-bold text-center mb-8 text-movistar-dark">¡Queremos escucharte!</h3>
+                    <form onsubmit="submitReview(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-sm font-bold text-gray-600 mb-2">Tu Nombre</label><input type="text" required class="w-full border-0 rounded-xl p-4 shadow-sm bg-white focus:ring-2 focus:ring-movistar-blue transition" placeholder="Nombre"></div>
+                            <div><label class="block text-sm font-bold text-gray-600 mb-2">Calificación</label><select class="w-full border-0 rounded-xl p-4 shadow-sm bg-white focus:ring-2 focus:ring-movistar-blue transition"><option value="5">⭐⭐⭐⭐⭐ Excelente</option><option value="4">⭐⭐⭐⭐ Muy buena</option></select></div>
+                        </div>
+                        <div><label class="block text-sm font-bold text-gray-600 mb-2">Tu Experiencia</label><textarea required rows="3" class="w-full border-0 rounded-xl p-4 shadow-sm bg-white focus:ring-2 focus:ring-movistar-blue transition" placeholder="Escribe aquí..."></textarea></div>
+                        <button type="submit" class="w-full bg-movistar-blue text-white font-bold py-4 rounded-xl hover:bg-movistar-hover transition shadow-lg">ENVIAR VALORACIÓN</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 7: SOPORTE 24/7 (NUEVA Y CODIFICADA) -->
+        <section id="view-soporte" class="hidden fade-in py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <div class="inline-block p-4 bg-blue-50 rounded-full text-movistar-blue text-4xl mb-6 shadow-sm"><i class="fas fa-life-ring"></i></div>
+                    <h2 class="text-4xl font-black mb-4 text-movistar-dark">Centro de Ayuda 24/7</h2>
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Selecciona el tema en el que necesitas apoyo. Nuestros asesores digitales están listos para atenderte.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+                    <!-- Card 1 -->
+                    <div onclick="contactSupport('tech')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 cursor-pointer support-card group text-center">
+                        <div class="support-icon w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl text-gray-400 group-hover:bg-movistar-blue group-hover:text-white mx-auto mb-4">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Fallas Técnicas</h3>
+                        <p class="text-gray-500 text-sm">Problemas con internet, llamadas o cobertura.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div onclick="contactSupport('billing')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 cursor-pointer support-card group text-center">
+                        <div class="support-icon w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl text-gray-400 group-hover:bg-movistar-green group-hover:text-white mx-auto mb-4">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Facturación</h3>
+                        <p class="text-gray-500 text-sm">Dudas sobre cobros, saldo o recargas.</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div onclick="contactSupport('sales')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 cursor-pointer support-card group text-center">
+                        <div class="support-icon w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl text-gray-400 group-hover:bg-purple-500 group-hover:text-white mx-auto mb-4">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Ventas</h3>
+                        <p class="text-gray-500 text-sm">Contratar líneas nuevas o renovaciones.</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div onclick="contactSupport('theft')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 cursor-pointer support-card group text-center">
+                        <div class="support-icon w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl text-gray-400 group-hover:bg-red-500 group-hover:text-white mx-auto mb-4">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Robo o Extravío</h3>
+                        <p class="text-gray-500 text-sm">Bloqueo inmediato de línea y equipo.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="max-w-3xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-6 text-movistar-dark">Preguntas Frecuentes</h3>
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-movistar-blue transition cursor-pointer bg-white">
+                            <h4 class="font-bold text-gray-700 flex justify-between">¿Cómo consulto mi saldo? <i class="fas fa-chevron-down text-gray-400"></i></h4>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-movistar-blue transition cursor-pointer bg-white">
+                            <h4 class="font-bold text-gray-700 flex justify-between">¿Dónde pago mi factura? <i class="fas fa-chevron-down text-gray-400"></i></h4>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-movistar-blue transition cursor-pointer bg-white">
+                            <h4 class="font-bold text-gray-700 flex justify-between">Configurar APN Movistar <i class="fas fa-chevron-down text-gray-400"></i></h4>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="contactSupport('general')" class="text-movistar-blue font-bold hover:underline">Ir al Chat de Soporte General <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL COTIZADOR -->
+    <div id="modal-cotizador" class="fixed inset-0 bg-black/70 z-[60] hidden flex items-center justify-center p-4 modal-backdrop opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-6xl h-[90vh] flex flex-col md:flex-row overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+            <!-- Columna Imagen -->
+            <div class="w-full md:w-5/12 bg-gray-50 p-8 flex flex-col justify-between relative">
+                <button onclick="closeModal()" class="md:hidden self-start mb-4 text-gray-500"><i class="fas fa-arrow-left"></i></button>
+                <div class="flex-grow flex flex-col items-center justify-center relative">
+                    <div class="absolute top-0 right-0 bg-gradient-to-r from-movistar-green to-green-400 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2 animate-bounce">
+                        <i class="fas fa-gift"></i> + Smartwatch
+                    </div>
+                    <img id="modal-img" src="" class="max-h-80 object-contain drop-shadow-2xl mix-blend-multiply transition-transform hover:scale-110 duration-500">
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <h2 id="modal-name" class="text-2xl font-black text-gray-800 mb-2 leading-tight"></h2>
+                    <div class="grid grid-cols-2 gap-4 text-xs text-gray-500">
+                        <div class="flex items-center gap-2"><i class="fas fa-camera text-movistar-blue text-lg"></i> <span id="spec-cam"></span></div>
+                        <div class="flex items-center gap-2"><i class="fas fa-mobile text-movistar-blue text-lg"></i> <span id="spec-screen"></span></div>
+                        <div class="flex items-center gap-2"><i class="fas fa-microchip text-movistar-blue text-lg"></i> <span id="spec-cpu"></span></div>
+                        <div class="flex items-center gap-2"><i class="fas fa-memory text-movistar-blue text-lg"></i> <span id="spec-storage"></span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna Datos -->
+            <div class="w-full md:w-7/12 p-8 md:p-12 overflow-y-auto bg-white">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-2xl font-bold text-movistar-dark">Configura tu Plan</h3>
+                    <button onclick="closeModal()" class="text-gray-300 hover:text-red-500 transition text-3xl">&times;</button>
+                </div>
+
+                <div class="flex items-end gap-4 mb-8 border-b border-gray-100 pb-8">
+                    <div><p class="text-sm text-gray-400">Precio Regular</p><p id="modal-list-price" class="text-xl line-through text-gray-300"></p></div>
+                    <div class="text-right flex-grow"><p class="text-sm text-movistar-green font-bold uppercase tracking-wider">Oferta Movistar</p><p id="modal-final-price" class="text-5xl font-black text-movistar-blue"></p></div>
+                </div>
+
+                <div class="space-y-8">
+                    <div>
+                        <label class="block font-bold text-sm text-gray-500 uppercase mb-3">1. Elige tu Plan</label>
+                        <select id="plan-select" onchange="updateCalc()" class="w-full border-2 border-gray-200 p-4 rounded-xl bg-white text-lg font-medium focus:border-movistar-blue focus:ring-0 outline-none transition cursor-pointer">
+                            <option value="156">Plan Pro 8 - $156/mes</option>
+                            <option value="186" selected>Plan Pro 10 - $186/mes (Recomendado)</option>
+                            <option value="300">Plan Pro 20 - $300/mes</option>
+                            <option value="699">Ilimitidatos - $699/mes</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block font-bold text-sm text-gray-500 uppercase mb-3">2. Plazo de Financiamiento</label>
+                        <div class="flex gap-4">
+                            <button onclick="setTerm(12)" id="t-12" class="flex-1 py-4 border-2 rounded-xl font-bold transition">12 M</button>
+                            <button onclick="setTerm(24)" id="t-24" class="flex-1 py-4 border-2 rounded-xl font-bold transition">24 M</button>
+                            <button onclick="setTerm(48)" id="t-48" class="flex-1 py-4 border-2 rounded-xl font-bold transition">48 M</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-50 to-white p-6 rounded-2xl border border-blue-100 flex justify-between items-center shadow-inner">
+                        <span class="text-movistar-dark font-bold text-lg">Mensualidad Total Estimada:</span>
+                        <span id="summ-total" class="text-4xl font-black text-movistar-blue">$0</span>
+                    </div>
+                    
+                    <button onclick="checkoutWhatsApp()" class="w-full bg-movistar-green hover:bg-green-600 text-white font-bold text-xl py-5 rounded-2xl transition-all shadow-xl hover:shadow-2xl flex justify-center items-center gap-3 transform hover:scale-[1.01]">
+                        <i class="fab fa-whatsapp text-3xl"></i> LO QUIERO CON REGALO
+                    </button>
+                    <p class="text-center text-xs text-gray-400">Aplican términos y condiciones. Sujeto a evaluación crediticia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHATBOT MAXI -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chat-window" class="hidden bg-white w-80 h-[450px] rounded-2xl shadow-2xl flex flex-col mb-4 overflow-hidden border border-gray-100 animate-fade-in origin-bottom-right transition-all">
+            <div class="bg-movistar-blue p-4 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"><i class="fas fa-robot text-movistar-blue text-lg"></i></div>
+                    <div><span class="font-bold block text-sm">Maxi IA</span><span class="text-[10px] opacity-80 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> En línea</span></div>
+                </div>
+                <button onclick="toggleChat()" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chat-msgs" class="flex-1 p-4 bg-gray-50 overflow-y-auto space-y-4 text-sm">
+                <div class="bg-white p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl shadow-sm border border-gray-100 text-gray-700">
+                    ¡Hola! Soy Maxi 🤖. Hoy tenemos promoción: <strong>Smartwatch GRATIS</strong> en cualquier equipo. ¿En qué te ayudo?
+                </div>
+            </div>
+            <div class="p-3 border-t bg-white flex gap-2 items-center">
+                <input type="text" id="chat-input" placeholder="Escribe aquí..." class="flex-1 border-0 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-movistar-blue" onkeydown="if(event.key === 'Enter') sendMsg()">
+                <button onclick="sendMsg()" class="text-movistar-blue w-10 h-10 flex items-center justify-center hover:bg-blue-50 rounded-full transition"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button onclick="toggleChat()" class="chat-float bg-movistar-green text-white w-14 h-14 rounded-full shadow-lg shadow-green-500/30 flex items-center justify-center text-2xl hover:bg-green-600 transition transform hover:scale-110">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <script>
+        const PHONE_NUMBER = "584124676073";
+        const apiKey = ""; 
+
+        const states = {"Aguascalientes": "AS", "Baja California": "BC", "Baja California Sur": "BS", "Campeche": "CC", "Coahuila": "CL", "Colima": "CM", "Chiapas": "CS", "Chihuahua": "CH", "Ciudad de México": "DF", "Durango": "DG", "Guanajuato": "GT", "Guerrero": "GR", "Hidalgo": "HG", "Jalisco": "JC", "Estado de México": "MC", "Michoacán": "MN", "Morelos": "MS", "Nayarit": "NT", "Nuevo León": "NL", "Oaxaca": "OC", "Puebla": "PL", "Querétaro": "QT", "Quintana Roo": "QR", "San Luis Potosí": "SP", "Sinaloa": "SL", "Sonora": "SR", "Tabasco": "TC", "Tamaulipas": "TS", "Tlaxcala": "TL", "Veracruz": "VZ", "Yucatán": "YN", "Zacatecas": "ZS"};
+
+        function calculateCURP(name, firstSurname, secondSurname, dob, sex, stateCode) {
+            const removeAccents = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+            const getFirstConsonant = (str) => { for (let i = 1; i < str.length; i++) if (!/[AEIOU]/.test(str[i]) && /[A-Z]/.test(str[i])) return str[i]; return 'X'; };
+            const getFirstVowel = (str) => { for (let i = 1; i < str.length; i++) if (/[AEIOU]/.test(str[i])) return str[i]; return 'X'; };
+            
+            name = removeAccents(name).split(" ")[0]; 
+            firstSurname = removeAccents(firstSurname);
+            secondSurname = secondSurname ? removeAccents(secondSurname) : "X";
+            
+            let pre = (firstSurname[0] + getFirstVowel(firstSurname) + secondSurname[0] + name[0]).replace("Ñ", "X");
+            const [y, m, d] = dob.split('-');
+            pre += y.slice(2) + m + d + sex + stateCode;
+            pre += getFirstConsonant(firstSurname) + getFirstConsonant(secondSurname) + getFirstConsonant(name);
+            pre += (parseInt(y) >= 2000 ? 'A' : '0');
+            
+            // Dígito Verificador (Simulado para frontend)
+            const chars = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+            let sum = 0;
+            for(let i=0; i<17; i++) {
+                let val = /[0-9]/.test(pre[i]) ? parseInt(pre[i]) : pre.charCodeAt(i) - 55;
+                sum += val * (18 - i);
+            }
+            let digit = 10 - (sum % 10);
+            return pre + (digit === 10 ? 0 : digit);
+        }
+
+        function initStates() {
+            const select = document.getElementById('port-state');
+            Object.keys(states).sort().forEach(state => {
+                const option = document.createElement('option');
+                option.value = states[state];
+                option.textContent = state;
+                select.appendChild(option);
+            });
+        }
+
+        function submitPortability(e) {
+            e.preventDefault();
+            const name = document.getElementById('port-name').value;
+            const pat = document.getElementById('port-app-paterno').value;
+            const mat = document.getElementById('port-app-materno').value;
+            const dob = document.getElementById('port-dob').value;
+            const sex = document.getElementById('port-sex').value;
+            const st = document.getElementById('port-state').value;
+            const ph = document.getElementById('port-phone').value;
+            const nip = document.getElementById('port-nip').value;
+            
+            const curp = calculateCURP(name, pat, mat, dob, sex, st);
+            const msg = `🚨 *TRÁMITE DE PORTABILIDAD*\n\nHola, deseo cambiarme a Movistar.\n\n👤 *Titular:* ${name} ${pat} ${mat}\n📅 *Nacimiento:* ${dob}\n📍 *Estado:* ${st}\n🆔 *CURP Generada:* ${curp}\n\n📱 *Número:* ${ph}\n🔑 *NIP:* ${nip}`;
+            sendWhatsapp(msg);
+        }
+
+        // --- 53 PRODUCTOS (INCLUYE IPHONE 17 SERIES) ---
+        const products = [
+            // IPHONE 17 SERIES (NUEVO)
+            { id: 51, name: "iPhone 17 Pro Max", brand: "apple", price: 32999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/IPhone_15_Pro_Blue_Titanium.svg/440px-IPhone_15_Pro_Blue_Titanium.svg.png", specs: {cam:"64MP", screen:"6.9", cpu:"A19 Pro", storage:"512GB"} },
+            { id: 52, name: "iPhone 17", brand: "apple", price: 21999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/IPhone_15_Plus_Blue_vector.svg/340px-IPhone_15_Plus_Blue_vector.svg.png", specs: {cam:"48MP", screen:"6.3", cpu:"A18", storage:"256GB"} },
+            { id: 53, name: "iPhone 17 SE", brand: "apple", price: 12999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/IPhone_SE_3_Midnight.svg/340px-IPhone_SE_3_Midnight.svg.png", specs: {cam:"12MP", screen:"6.1", cpu:"A18", storage:"128GB"} },
+            // APPLE (10)
+            { id: 1, name: "iPhone 15 Pro Max", brand: "apple", price: 28999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/IPhone_15_Pro_Blue_Titanium.svg/440px-IPhone_15_Pro_Blue_Titanium.svg.png", specs: {cam:"48MP", screen:"6.7", cpu:"A17", storage:"256GB"} },
+            { id: 2, name: "iPhone 15 Pro", brand: "apple", price: 23999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/IPhone_15_Pro_Blue_Titanium.svg/440px-IPhone_15_Pro_Blue_Titanium.svg.png", specs: {cam:"48MP", screen:"6.1", cpu:"A17", storage:"128GB"} },
+            { id: 3, name: "iPhone 15 Plus", brand: "apple", price: 21999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/IPhone_15_Plus_Blue_vector.svg/340px-IPhone_15_Plus_Blue_vector.svg.png", specs: {cam:"48MP", screen:"6.7", cpu:"A16", storage:"128GB"} },
+            { id: 4, name: "iPhone 15", brand: "apple", price: 19499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/IPhone_15_Plus_Blue_vector.svg/340px-IPhone_15_Plus_Blue_vector.svg.png", specs: {cam:"48MP", screen:"6.1", cpu:"A16", storage:"128GB"} },
+            { id: 5, name: "iPhone 14 Pro Max", brand: "apple", price: 25999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/IPhone_14_Midnight_vector.svg/340px-IPhone_14_Midnight_vector.svg.png", specs: {cam:"48MP", screen:"6.7", cpu:"A16", storage:"128GB"} },
+            { id: 6, name: "iPhone 14", brand: "apple", price: 16999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/IPhone_14_Midnight_vector.svg/340px-IPhone_14_Midnight_vector.svg.png", specs: {cam:"12MP", screen:"6.1", cpu:"A15", storage:"128GB"} },
+            { id: 7, name: "iPhone 13", brand: "apple", price: 13999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/IPhone_13_Midnight_vector.svg/340px-IPhone_13_Midnight_vector.svg.png", specs: {cam:"12MP", screen:"6.1", cpu:"A15", storage:"128GB"} },
+            { id: 8, name: "iPhone 12", brand: "apple", price: 11999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/IPhone_12_Blue.svg/340px-IPhone_12_Blue.svg.png", specs: {cam:"12MP", screen:"6.1", cpu:"A14", storage:"64GB"} },
+            { id: 9, name: "iPhone 11", brand: "apple", price: 8999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/IPhone_12_Blue.svg/340px-IPhone_12_Blue.svg.png", specs: {cam:"12MP", screen:"6.1", cpu:"A13", storage:"64GB"} },
+            { id: 10, name: "iPhone SE 3", brand: "apple", price: 10499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/IPhone_SE_3_Midnight.svg/340px-IPhone_SE_3_Midnight.svg.png", specs: {cam:"12MP", screen:"4.7", cpu:"A15", storage:"64GB"} },
+            // SAMSUNG (10)
+            { id: 11, name: "Galaxy S24 Ultra", brand: "samsung", price: 30999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Samsung_Galaxy_S24_Ultra_Titanium_Violet_back.jpg/440px-Samsung_Galaxy_S24_Ultra_Titanium_Violet_back.jpg", specs: {cam:"200MP", screen:"6.8", cpu:"SD8G3", storage:"512GB"} },
+            { id: 12, name: "Galaxy S24+", brand: "samsung", price: 23999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Samsung_Galaxy_S24_Plus_Marble_Gray_back.jpg/440px-Samsung_Galaxy_S24_Plus_Marble_Gray_back.jpg", specs: {cam:"50MP", screen:"6.7", cpu:"SD8G3", storage:"256GB"} },
+            { id: 13, name: "Galaxy S24", brand: "samsung", price: 19499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Samsung_Galaxy_S24_Plus_Marble_Gray_back.jpg/440px-Samsung_Galaxy_S24_Plus_Marble_Gray_back.jpg", specs: {cam:"50MP", screen:"6.2", cpu:"SD8G3", storage:"256GB"} },
+            { id: 14, name: "Galaxy Z Fold 5", brand: "samsung", price: 39999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Samsung_Galaxy_Z_Fold_5_Icy_Blue_open.jpg/440px-Samsung_Galaxy_Z_Fold_5_Icy_Blue_open.jpg", specs: {cam:"50MP", screen:"7.6", cpu:"SD8G2", storage:"512GB"} },
+            { id: 15, name: "Galaxy Z Flip 5", brand: "samsung", price: 24999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Samsung_Galaxy_Z_Flip_5_Mint.jpg/440px-Samsung_Galaxy_Z_Flip_5_Mint.jpg", specs: {cam:"12MP", screen:"6.7", cpu:"SD8G2", storage:"256GB"} },
+            { id: 16, name: "Galaxy A54", brand: "samsung", price: 8999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Samsung_Galaxy_A05s_Silver.jpg/440px-Samsung_Galaxy_A05s_Silver.jpg", specs: {cam:"50MP", screen:"6.4", cpu:"Exynos", storage:"128GB"} },
+            { id: 17, name: "Galaxy A34", brand: "samsung", price: 6999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Samsung_Galaxy_A05s_Silver.jpg/440px-Samsung_Galaxy_A05s_Silver.jpg", specs: {cam:"48MP", screen:"6.6", cpu:"Dimensity", storage:"128GB"} },
+            { id: 18, name: "Galaxy A15", brand: "samsung", price: 3500, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Samsung_Galaxy_A15_Blue.jpg/440px-Samsung_Galaxy_A15_Blue.jpg", specs: {cam:"50MP", screen:"6.5", cpu:"Helio", storage:"128GB"} },
+            { id: 19, name: "Galaxy S23 FE", brand: "samsung", price: 11999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Samsung_Galaxy_A05s_Silver.jpg/440px-Samsung_Galaxy_A05s_Silver.jpg", specs: {cam:"50MP", screen:"6.4", cpu:"Exynos", storage:"128GB"} },
+            { id: 20, name: "Galaxy A05", brand: "samsung", price: 2499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Samsung_Galaxy_A05s_Silver.jpg/440px-Samsung_Galaxy_A05s_Silver.jpg", specs: {cam:"50MP", screen:"6.7", cpu:"Helio", storage:"64GB"} },
+            // MOTOROLA (10)
+            { id: 21, name: "Edge 40 Pro", brand: "motorola", price: 22999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Motorola_Edge_40_Neo.jpg/440px-Motorola_Edge_40_Neo.jpg", specs: {cam:"50MP", screen:"6.67", cpu:"SD8G2", storage:"256GB"} },
+            { id: 22, name: "Edge 40 Neo", brand: "motorola", price: 7699, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Motorola_Edge_40_Neo.jpg/440px-Motorola_Edge_40_Neo.jpg", specs: {cam:"50MP", screen:"6.55", cpu:"Dimensity", storage:"256GB"} },
+            { id: 23, name: "Razr 40 Ultra", brand: "motorola", price: 26999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Motorola_Edge_40_Neo.jpg/440px-Motorola_Edge_40_Neo.jpg", specs: {cam:"12MP", screen:"6.9", cpu:"SD8+", storage:"512GB"} },
+            { id: 24, name: "Moto G84", brand: "motorola", price: 5999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"50MP", screen:"6.5", cpu:"SD695", storage:"256GB"} },
+            { id: 25, name: "Moto G54", brand: "motorola", price: 4999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"50MP", screen:"6.5", cpu:"Dimensity", storage:"256GB"} },
+            { id: 26, name: "Moto G14", brand: "motorola", price: 3299, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"50MP", screen:"6.5", cpu:"Unisoc", storage:"128GB"} },
+            { id: 27, name: "Moto E13", brand: "motorola", price: 2499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"13MP", screen:"6.5", cpu:"Unisoc", storage:"64GB"} },
+            { id: 28, name: "Edge 30 Fusion", brand: "motorola", price: 9999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Motorola_Edge_40_Neo.jpg/440px-Motorola_Edge_40_Neo.jpg", specs: {cam:"50MP", screen:"6.55", cpu:"SD888+", storage:"256GB"} },
+            { id: 29, name: "Moto G72", brand: "motorola", price: 5499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"108MP", screen:"6.6", cpu:"Helio", storage:"128GB"} },
+            { id: 30, name: "Moto G23", brand: "motorola", price: 3999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Motorola_Moto_G84_5G.jpg/440px-Motorola_Moto_G84_5G.jpg", specs: {cam:"50MP", screen:"6.5", cpu:"Helio", storage:"128GB"} },
+            // XIAOMI (10)
+            { id: 31, name: "Xiaomi 13T Pro", brand: "xiaomi", price: 18999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"50MP", screen:"6.67", cpu:"Dimensity", storage:"512GB"} },
+            { id: 32, name: "Xiaomi 13T", brand: "xiaomi", price: 14999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"50MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 33, name: "Xiaomi 12T", brand: "xiaomi", price: 10999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"108MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 34, name: "POCO F5 Pro", brand: "xiaomi", price: 9999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Poco_X6_Pro_5G.jpg/440px-Poco_X6_Pro_5G.jpg", specs: {cam:"64MP", screen:"6.67", cpu:"SD8+G1", storage:"256GB"} },
+            { id: 35, name: "POCO X6 Pro", brand: "xiaomi", price: 6499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Poco_X6_Pro_5G.jpg/440px-Poco_X6_Pro_5G.jpg", specs: {cam:"64MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 36, name: "POCO M6 Pro", brand: "xiaomi", price: 3999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Poco_X6_Pro_5G.jpg/440px-Poco_X6_Pro_5G.jpg", specs: {cam:"64MP", screen:"6.67", cpu:"Helio", storage:"256GB"} },
+            { id: 37, name: "POCO C65", brand: "xiaomi", price: 2599, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Poco_X6_Pro_5G.jpg/440px-Poco_X6_Pro_5G.jpg", specs: {cam:"50MP", screen:"6.74", cpu:"Helio", storage:"128GB"} },
+            { id: 38, name: "Xiaomi 13 Lite", brand: "xiaomi", price: 8499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"50MP", screen:"6.55", cpu:"SD7", storage:"128GB"} },
+            { id: 39, name: "Xiaomi 12 Lite", brand: "xiaomi", price: 6999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"108MP", screen:"6.55", cpu:"SD778", storage:"128GB"} },
+            { id: 40, name: "Black Shark 5", brand: "xiaomi", price: 11999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"64MP", screen:"6.67", cpu:"SD870", storage:"128GB"} },
+            // REDMI (10)
+            { id: 41, name: "Redmi Note 13 Pro+", brand: "redmi", price: 8999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"200MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 42, name: "Redmi Note 13 Pro", brand: "redmi", price: 6999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"200MP", screen:"6.67", cpu:"Helio", storage:"256GB"} },
+            { id: 43, name: "Redmi Note 13", brand: "redmi", price: 4999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"108MP", screen:"6.67", cpu:"SD685", storage:"128GB"} },
+            { id: 44, name: "Redmi 13C", brand: "redmi", price: 2999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Xiaomi_Redmi_13C.jpg/440px-Xiaomi_Redmi_13C.jpg", specs: {cam:"50MP", screen:"6.74", cpu:"Helio", storage:"128GB"} },
+            { id: 45, name: "Redmi 12", brand: "redmi", price: 3299, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Xiaomi_Redmi_13C.jpg/440px-Xiaomi_Redmi_13C.jpg", specs: {cam:"50MP", screen:"6.79", cpu:"Helio", storage:"128GB"} },
+            { id: 46, name: "Redmi A3", brand: "redmi", price: 1999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Xiaomi_Redmi_13C.jpg/440px-Xiaomi_Redmi_13C.jpg", specs: {cam:"8MP", screen:"6.71", cpu:"Helio", storage:"64GB"} },
+            { id: 47, name: "Redmi Note 12S", brand: "redmi", price: 4499, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"108MP", screen:"6.43", cpu:"Helio", storage:"256GB"} },
+            { id: 48, name: "Redmi Note 12", brand: "redmi", price: 3999, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Xiaomi_Redmi_Note_13_Pro_5G.jpg/440px-Xiaomi_Redmi_Note_13_Pro_5G.jpg", specs: {cam:"50MP", screen:"6.67", cpu:"SD4", storage:"128GB"} },
+            { id: 49, name: "Redmi 10C", brand: "redmi", price: 2799, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Xiaomi_Redmi_13C.jpg/440px-Xiaomi_Redmi_13C.jpg", specs: {cam:"50MP", screen:"6.71", cpu:"SD680", storage:"64GB"} },
+            { id: 50, name: "Redmi 9A", brand: "redmi", price: 1799, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Xiaomi_Redmi_13C.jpg/440px-Xiaomi_Redmi_13C.jpg", specs: {cam:"13MP", screen:"6.53", cpu:"Helio", storage:"32GB"} }
+        ];
+
+        let state = { view: 'home', product: null, term: 24, planPrice: 186 };
+
+        function showView(viewId) {
+            document.querySelectorAll('main > section').forEach(el => { el.classList.add('hidden'); el.classList.remove('section-visible'); });
+            const newView = document.getElementById(`view-${viewId}`);
+            newView.classList.remove('hidden'); void newView.offsetWidth; newView.classList.add('section-visible');
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            const navBtn = document.getElementById(`nav-${viewId}`);
+            if(navBtn) navBtn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function initStore() {
+            filterProducts();
+            const brands = [...new Set(products.map(p => p.brand))];
+            let html = `<label class="flex items-center cursor-pointer mb-2"><input type="radio" name="brand" value="all" checked onchange="filterProducts()" class="text-movistar-blue"><span class="ml-2 text-sm capitalize font-medium text-gray-700">Todas</span></label>`;
+            brands.forEach(b => html += `<label class="flex items-center cursor-pointer mb-2"><input type="radio" name="brand" value="${b}" onchange="filterProducts()" class="text-movistar-blue"><span class="ml-2 text-sm capitalize font-medium text-gray-700">${b}</span></label>`);
+            document.getElementById('brand-filters').innerHTML = html;
+        }
+
+        function filterProducts() {
+            const brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
+            renderGrid(products.filter(p => brand === 'all' || p.brand === brand));
+        }
+
+        function searchProducts(query) { renderGrid(products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.brand.toLowerCase().includes(query.toLowerCase()))); }
+
+        function renderGrid(items) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            items.forEach(p => {
+                const discPrice = Math.floor(p.price * 0.6);
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 product-card flex flex-col justify-between relative overflow-hidden group">
+                        <div class="absolute top-3 right-3 bg-green-50 text-movistar-green text-[10px] font-bold px-3 py-1 rounded-full shadow-sm z-10 flex items-center gap-1"><i class="fas fa-gift"></i> Smartwatch</div>
+                        <div class="relative mb-4 p-4">
+                            <span class="absolute top-0 left-0 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded">-40%</span>
+                            <img src="${p.img}" class="h-48 w-full object-contain mx-auto transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://via.placeholder.com/200'">
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">${p.brand}</p>
+                            <h3 class="font-bold text-lg mb-2 leading-tight text-gray-800">${p.name}</h3>
+                            <div class="flex items-end gap-3 mb-4">
+                                <span class="text-2xl font-black text-movistar-blue">$${discPrice.toLocaleString()}</span>
+                                <span class="text-sm text-gray-400 line-through">$${p.price.toLocaleString()}</span>
+                            </div>
+                            <button onclick="openModal(${p.id})" class="w-full bg-white border border-movistar-blue text-movistar-blue font-bold py-3 rounded-xl hover:bg-movistar-blue hover:text-white transition-all shadow-sm text-sm tracking-wide">
+                                VER OFERTA
+                            </button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function openModal(id) {
+            const p = products.find(x => x.id === id);
+            state.product = p;
+            document.getElementById('modal-img').src = p.img;
+            document.getElementById('modal-name').innerText = p.name;
+            document.getElementById('modal-list-price').innerText = `$${p.price.toLocaleString()}`;
+            document.getElementById('modal-final-price').innerText = `$${Math.floor(p.price * 0.6).toLocaleString()}`;
+            
+            document.getElementById('spec-cam').innerText = p.specs.cam;
+            document.getElementById('spec-screen').innerText = p.specs.screen;
+            document.getElementById('spec-cpu').innerText = p.specs.cpu;
+            document.getElementById('spec-storage').innerText = p.specs.storage;
+            
+            const modal = document.getElementById('modal-cotizador');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); modal.children[0].classList.remove('scale-95'); modal.children[0].classList.add('scale-100'); }, 10);
+            updateCalc();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-cotizador');
+            modal.classList.add('opacity-0'); modal.children[0].classList.remove('scale-100'); modal.children[0].classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function setTerm(t) {
+            state.term = t;
+            [12,24,48].forEach(x => { document.getElementById(`t-${x}`).className = x===t ? "flex-1 py-4 border-2 border-movistar-blue bg-blue-50 text-movistar-blue rounded-xl font-bold transition shadow-sm" : "flex-1 py-4 border-2 border-gray-100 text-gray-400 rounded-xl font-bold transition hover:border-gray-300"; });
+            updateCalc();
+        }
+
+        function updateCalc() {
+            if(!state.product) return;
+            const plan = parseInt(document.getElementById('plan-select').value);
+            const total = plan + (Math.floor(state.product.price * 0.6) / state.term);
+            document.getElementById('summ-total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function checkoutWhatsApp() {
+            const plan = document.getElementById('plan-select');
+            const msg = `Hola, me interesa la promoción del *${state.product.name}* con *Smartwatch de Regalo* 🎁.\n\n📱 Plan: ${plan.options[plan.selectedIndex].text}\n🗓️ Plazo: ${state.term} Meses\n💰 Mensualidad: ${document.getElementById('summ-total').innerText}\n\n¿Cuáles son los requisitos?`;
+            sendWhatsapp(msg);
+        }
+
+        function sendWhatsapp(msg) { window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank'); }
+        function contactSupport(type) { 
+            let topic = "General";
+            if(type === 'tech') topic = "Falla Técnica";
+            if(type === 'billing') topic = "Facturación";
+            if(type === 'sales') topic = "Ventas";
+            if(type === 'theft') topic = "Robo o Extravío";
+            const msg = `🆘 *SOPORTE MOVISTAR*\nHola, necesito ayuda con un tema de: *${topic}*.`;
+            sendWhatsapp(msg); 
+        }
+        function submitReview(e) { e.preventDefault(); alert("¡Gracias por tu valoración! ⭐"); e.target.reset(); }
+        
+        function initTestimonials() {
+            const container = document.getElementById('reviews-container');
+            const names = ["Andrea G.", "Roberto M.", "Carla P.", "Luis F.", "Fernanda T.", "Jorge R."];
+            const texts = ["Excelente servicio, el iPhone 15 me llegó rápido.", "La señal es mucho mejor de lo que esperaba.", "Portabilidad por WhatsApp súper fácil.", "S24 Ultra a meses sin intereses, todo claro.", "Maxi resolvió mis dudas de volada.", "Nunca me quedo sin datos con el plan Ilimitado."];
+            let html = '';
+            for(let i=0; i<6; i++) {
+                html += `
+                <div class="bg-gray-50 p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-center mb-4 gap-3">
+                        <div class="w-10 h-10 bg-movistar-blue/10 rounded-full flex items-center justify-center text-movistar-blue font-bold">${names[i][0]}</div>
+                        <div><span class="text-sm font-bold text-gray-800 block">${names[i]}</span><div class="text-yellow-400 text-xs">⭐⭐⭐⭐⭐</div></div>
+                    </div>
+                    <p class="text-gray-600 text-sm italic leading-relaxed">"${texts[i]}"</p>
+                    <div class="mt-4 flex items-center gap-1 text-[10px] text-green-600 font-bold uppercase tracking-wider"><i class="fas fa-check-circle"></i> Compra verificada</div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
+        async function sendMsg() {
+            const inp = document.getElementById('chat-input');
+            const txt = inp.value; if(!txt) return;
+            const box = document.getElementById('chat-msgs');
+            box.innerHTML += `<div class="bg-blue-50 p-3 rounded-tr-xl rounded-tl-xl rounded-bl-xl shadow-sm max-w-[90%] self-end ml-auto text-right border border-blue-100 mb-2 text-movistar-blue font-medium">${txt}</div>`;
+            inp.value = ''; box.scrollTop = box.scrollHeight;
+            
+            const loadingId = 'loading-' + Date.now();
+            box.innerHTML += `<div id="${loadingId}" class="bg-white p-3 rounded-lg shadow-sm max-w-[90%] border mb-2 flex items-center w-fit"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+            box.scrollTop = box.scrollHeight;
+            
+            try {
+                const systemPrompt = `Eres Maxi, asistente de Movistar. Vendes equipos con Smartwatch de regalo y planes. Sé breve, amigable y usa emojis.`;
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: txt }] }], systemInstruction: { parts: [{ text: systemPrompt }] } }) });
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                box.innerHTML += `<div class="bg-white p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl shadow-sm border border-gray-100 text-gray-700 mb-2">${data.candidates?.[0]?.content?.parts?.[0]?.text || "Intenta de nuevo."}</div>`;
+                box.scrollTop = box.scrollHeight;
+            } catch (error) { document.getElementById(loadingId).remove(); box.innerHTML += `<div class="bg-white p-3 rounded-lg border text-red-500">Error de conexión.</div>`; }
+        }
+
+        window.onload = () => { initStore(); initTestimonials(); initStates(); showView('home'); };
+    </script>
+</body>
+</html>
