@@ -108,9 +108,18 @@
     <!-- Navbar Corporativo -->
     <nav class="bg-white/95 backdrop-blur-md shadow-sm fixed w-full z-50 top-0 h-16 md:h-20 flex items-center transition-all duration-300">
         <div class="container mx-auto px-4 flex justify-between items-center h-full">
-            <!-- Logo M Movistar (Minimalista) -->
-            <a href="#" onclick="showView('home')" class="flex items-center gap-2 cursor-pointer group">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Movistar_Logo.svg/1024px-Movistar_Logo.svg.png" alt="M" class="h-8 md:h-9 group-hover:scale-110 transition-transform duration-300">
+            <!-- Logo M Movistar (Simulado con SVG) -->
+            <a href="#" onclick="showView('home')" class="flex items-center gap-2 cursor-pointer group" aria-label="Inicio">
+                <svg class="h-10 w-auto group-hover:scale-110 transition-transform duration-300" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Simulación de la "M" redondeada de Movistar -->
+                    <path d="M15,70 C15,70 15,30 30,30 C45,30 50,60 50,60 C50,60 55,30 70,30 C85,30 85,70 85,70" 
+                          fill="none" 
+                          stroke="#019DF4" 
+                          stroke-width="14" 
+                          stroke-linecap="round" 
+                          stroke-linejoin="round"/>
+                </svg>
+                <span class="text-2xl font-bold text-movistar-blue tracking-tighter hidden md:block">movistar</span>
             </a>
 
             <!-- Menú Principal -->
@@ -152,7 +161,7 @@
     <!-- CONTENEDOR PRINCIPAL -->
     <main class="pt-16 md:pt-20 flex-grow bg-gray-50">
 
-        <!-- VISTA 1: HOME (REDITADO VISUALMENTE) -->
+        <!-- VISTA 1: HOME -->
         <section id="view-home" class="fade-in">
             <!-- Hero Moderno -->
             <div class="relative h-[550px] md:h-[650px] overflow-hidden flex items-center bg-movistar-dark">
@@ -185,23 +194,71 @@
                 </div>
             </div>
 
-            <!-- Accesos Rápidos (Floating Cards) -->
-            <div class="container mx-auto px-4 -mt-24 relative z-20 pb-12">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div onclick="showView('equipos')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-blue group">
-                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-movistar-blue text-2xl mb-4 group-hover:bg-movistar-blue group-hover:text-white transition"><i class="fas fa-mobile-alt"></i></div>
-                        <h3 class="font-bold text-xl text-gray-800 mb-2">Renueva tu Equipo</h3>
-                        <p class="text-gray-500 text-sm">Encuentra los últimos modelos con 40% de descuento y regalos.</p>
+            <!-- SECCIÓN NUEVA: PREPAGO ROLLOVERS (EN EL MEDIO) -->
+            <div class="container mx-auto px-4 py-16">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-black text-movistar-dark">Prepago Rollover</h2>
+                    <p class="text-gray-600">Tus datos no se pierden, se acumulan. ¡Recarga ahora!</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Prepago 50 -->
+                    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-8 shadow-lg border-2 border-transparent hover:border-movistar-blue transition-all transform hover:-translate-y-1 flex flex-col md:flex-row items-center gap-6">
+                        <div class="bg-movistar-blue text-white rounded-full w-24 h-24 flex items-center justify-center text-3xl font-black shadow-md flex-shrink-0">
+                            $50
+                        </div>
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-xl font-bold text-gray-800">Paquete Prepago $50</h3>
+                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                <li><i class="fas fa-check text-movistar-green"></i> <strong>1 GB</strong> de navegación libre</li>
+                                <li><i class="fas fa-check text-movistar-green"></i> Redes Sociales (WhatsApp, FB, X)</li>
+                                <li><i class="fas fa-clock text-gray-400"></i> Vigencia: <strong>7 días</strong></li>
+                            </ul>
+                        </div>
+                        <button onclick="sendWhatsapp('Quiero recargar $50 de Prepago')" class="bg-white border border-movistar-blue text-movistar-blue font-bold py-2 px-6 rounded-full hover:bg-movistar-blue hover:text-white transition">
+                            Recargar
+                        </button>
                     </div>
-                    <div onclick="showView('portabilidad')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-green group">
-                        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-movistar-green text-2xl mb-4 group-hover:bg-movistar-green group-hover:text-white transition"><i class="fas fa-exchange-alt"></i></div>
-                        <h3 class="font-bold text-xl text-gray-800 mb-2">Portabilidad Express</h3>
-                        <p class="text-gray-500 text-sm">Trae tu número en 24 horas y obtén doble de GB por un año.</p>
+
+                    <!-- Prepago 100 -->
+                    <div class="bg-gradient-to-br from-movistar-dark to-slate-900 rounded-2xl p-8 shadow-lg border-2 border-movistar-green transition-all transform hover:-translate-y-1 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 bg-movistar-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MÁS VENDIDO</div>
+                        <div class="bg-movistar-green text-white rounded-full w-24 h-24 flex items-center justify-center text-3xl font-black shadow-md flex-shrink-0 z-10">
+                            $100
+                        </div>
+                        <div class="flex-grow text-center md:text-left z-10">
+                            <h3 class="text-xl font-bold text-white">Paquete Prepago $100</h3>
+                            <ul class="text-sm text-gray-300 mt-2 space-y-1">
+                                <li><i class="fas fa-check text-movistar-green"></i> <strong>4 GB</strong> de navegación libre</li>
+                                <li><i class="fas fa-check text-movistar-green"></i> Redes Sociales <strong>ILIMITADAS</strong></li>
+                                <li><i class="fas fa-clock text-gray-400"></i> Vigencia: <strong>14 días</strong></li>
+                            </ul>
+                        </div>
+                        <button onclick="sendWhatsapp('Quiero recargar $100 de Prepago')" class="z-10 bg-movistar-green hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full transition shadow-lg">
+                            Recargar
+                        </button>
                     </div>
-                    <div onclick="showView('soporte')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-dark group">
-                        <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-movistar-dark text-2xl mb-4 group-hover:bg-movistar-dark group-hover:text-white transition"><i class="fas fa-user-shield"></i></div>
-                        <h3 class="font-bold text-xl text-gray-800 mb-2">Centro de Ayuda</h3>
-                        <p class="text-gray-500 text-sm">Resuelve dudas de facturación, fallas o reportes al instante.</p>
+                </div>
+            </div>
+
+            <!-- Accesos Rápidos (Movidos Abajo) -->
+            <div class="bg-gray-100 py-16">
+                <div class="container mx-auto px-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div onclick="showView('equipos')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-blue group">
+                            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-movistar-blue text-2xl mb-4 group-hover:bg-movistar-blue group-hover:text-white transition"><i class="fas fa-mobile-alt"></i></div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Renueva tu Equipo</h3>
+                            <p class="text-gray-500 text-sm">Encuentra los últimos modelos con 40% de descuento y regalos.</p>
+                        </div>
+                        <div onclick="showView('portabilidad')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-green group">
+                            <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-movistar-green text-2xl mb-4 group-hover:bg-movistar-green group-hover:text-white transition"><i class="fas fa-exchange-alt"></i></div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Portabilidad Express</h3>
+                            <p class="text-gray-500 text-sm">Trae tu número en 24 horas y obtén doble de GB por un año.</p>
+                        </div>
+                        <div onclick="showView('soporte')" class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-2 border-b-4 border-movistar-dark group">
+                            <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-movistar-dark text-2xl mb-4 group-hover:bg-movistar-dark group-hover:text-white transition"><i class="fas fa-user-shield"></i></div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Centro de Ayuda</h3>
+                            <p class="text-gray-500 text-sm">Resuelve dudas de facturación, fallas o reportes al instante.</p>
+                        </div>
                     </div>
                 </div>
             </div>
