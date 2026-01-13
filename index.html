@@ -876,60 +876,7 @@
                     </div>`;
             });
         }
-</main> <section id="view-cobertura" class="hidden py-16 bg-gray-900 text-white min-h-screen">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2">
-                    <div class="inline-flex items-center gap-2 mb-4 bg-movistar-blue/10 px-4 py-2 rounded-full border border-movistar-blue/20">
-                        <span class="w-2 h-2 rounded-full bg-movistar-blue animate-ping"></span>
-                        <span class="text-movistar-blue text-xs font-bold tracking-widest">RED 5G LTE ACTIVA</span>
-                    </div>
-                    <h2 class="text-5xl font-black mb-6">MÉXICO EN <br><span class="text-movistar-blue">ALTA VELOCIDAD</span></h2>
-                    <p class="text-gray-400 text-lg mb-8">Nuestra red topográfica garantiza conexión estable incluso en zonas de relieve complejo.</p>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                            <span class="w-4 h-4 rounded-full bg-movistar-blue shadow-[0_0_10px_#019DF4]"></span>
-                            <span class="text-sm font-bold">Cobertura 5G (Nodos Urbanos)</span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                            <span class="w-4 h-4 rounded-full bg-movistar-green shadow-[0_0_10px_#5BC500]"></span>
-                            <span class="text-sm font-bold">Cobertura 5G LTE EXTENDIDA (Nacional)</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="lg:w-1/2 w-full">
-                    <div class="map-container h-[550px] shadow-2xl border border-white/10 relative">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Mexico_relief_location_map.jpg/1024px-Mexico_relief_location_map.jpg" 
-                             class="w-full h-full object-cover opacity-40 grayscale contrast-125 brightness-75">
-                        
-                        <div class="absolute inset-0 network-grid opacity-30"></div>
-                        <div class="radar-scan"></div>
-
-                        <div class="signal-point w-40 h-40 top-[45%] left-[48%]"></div> <div class="signal-point-blue w-24 h-24 top-[22%] left-[25%]"></div> <div class="signal-point-blue w-32 h-32 top-[35%] left-[20%]"></div> <div class="signal-point w-24 h-24 top-[60%] left-[70%]"></div> </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    </main> ```
-
----
-
-### 2. ¿Por qué debe ir ahí?
-1.  **Navegación:** Tu función `showView(viewId)` oculta todas las secciones dentro de `<main>` y solo muestra la que coincide con el ID. Si la pegas fuera de `<main>`, no se ocultará correctamente cuando cambies a "Inicio" o "Tienda".
-2.  **Z-Index:** Al estar dentro del flujo principal, respetará el Navbar fijo que tienes arriba.
-
-### 3. Recordatorio del CSS
-Asegúrate de que en tu etiqueta `<style>` (al principio del archivo) tengas estas reglas para que el mapa se mueva y brille:
-
-```css
-.map-container { position: relative; background-color: #0B2739; overflow: hidden; border-radius: 1.5rem; }
-.network-grid { background-image: linear-gradient(rgba(1, 157, 244, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(1, 157, 244, 0.2) 1px, transparent 1px); background-size: 30px 30px; }
-.signal-point { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(91,197,0,0.6) 0%, rgba(91,197,0,0) 70%); animation: pulse-signal 3s infinite; }
-.signal-point-blue { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(1,157,244,0.6) 0%, rgba(1,157,244,0) 70%); animation: pulse-signal 4s infinite 1s; }
-@keyframes pulse-signal { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
         function openModal(id) {
             const p = products.find(x => x.id === id);
             state.product = p;
@@ -1031,8 +978,6 @@ Asegúrate de que en tu etiqueta `<style>` (al principio del archivo) tengas est
     </script>
 </body>
 </html>
-
-
 
 
 
